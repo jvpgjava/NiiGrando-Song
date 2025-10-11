@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component
 @Component
 class SearchCommand(private val playerManager: PlayerManager) : Command {
     override val name = "search"
-    override val description = "Busca e toca uma música no YouTube (alternativa ao play)"
+    override val description = "Busca e toca uma música (alternativa ao play)"
     override val usage = "!search <termo de busca>"
 
     override fun execute(event: MessageReceivedEvent, args: List<String>) {
@@ -34,10 +34,10 @@ class SearchCommand(private val playerManager: PlayerManager) : Command {
 
         val searchTerm = args.joinToString(" ")
         
-        // Usar ytsearch para busca no YouTube
-        val searchUrl = "ytsearch:$searchTerm"
+        // Usar busca universal
+        val searchUrl = "scsearch:$searchTerm"
         
-        event.channel.sendMessage("🔍 Buscando: **$searchTerm**").queue()
+        event.channel.sendMessage("🔍 **Buscando:** `$searchTerm`\n🎵 **Plataforma:** SoundCloud").queue()
         playerManager.loadAndPlay(event.channel.asTextChannel(), searchUrl)
     }
 }

@@ -23,12 +23,12 @@ class HelpCommand(
             .setColor(Color.GREEN)
 
         // Agrupar comandos por categoria
-        val platformCommands = commands.filter { it.name in listOf("play", "find", "soundcloud", "bandcamp", "twitch", "vimeo", "mixcloud", "radio", "file") }
+        val platformCommands = commands.filter { it.name in listOf("play", "find", "soundcloud", "bandcamp", "twitch", "vimeo", "mixcloud", "radio", "file", "search") }
         val controlCommands = commands.filter { it.name in listOf("pause", "resume", "skip", "stop", "queue", "np") }
-        val otherCommands = commands.filter { it.name !in listOf("play", "find", "soundcloud", "bandcamp", "twitch", "vimeo", "mixcloud", "radio", "file", "pause", "resume", "skip", "stop", "queue", "np") }
+        val otherCommands = commands.filter { it.name !in listOf("play", "find", "soundcloud", "bandcamp", "twitch", "vimeo", "mixcloud", "radio", "file", "search", "pause", "resume", "skip", "stop", "queue", "np") }
         
         embed.addField("🎵 **Comandos de Música**", "", false)
-        platformCommands.forEach { command ->
+        platformCommands.sortedBy { it.name }.forEach { command ->
             embed.addField(
                 "$prefix${command.name}",
                 "${command.description}\n`${command.usage}`",
@@ -37,7 +37,7 @@ class HelpCommand(
         }
         
         embed.addField("🎮 **Controles de Player**", "", false)
-        controlCommands.forEach { command ->
+        controlCommands.sortedBy { it.name }.forEach { command ->
             embed.addField(
                 "$prefix${command.name}",
                 "${command.description}\n`${command.usage}`",
@@ -46,7 +46,7 @@ class HelpCommand(
         }
         
         embed.addField("ℹ️ **Outros Comandos**", "", false)
-        otherCommands.forEach { command ->
+        otherCommands.sortedBy { it.name }.forEach { command ->
             embed.addField(
                 "$prefix${command.name}",
                 "${command.description}\n`${command.usage}`",
@@ -58,7 +58,8 @@ class HelpCommand(
             "• Use `!find` para busca universal em plataformas confiáveis\n" +
             "• Use `!play` para busca automática\n" +
             "• SoundCloud e Bandcamp funcionam perfeitamente\n" +
-            "• Para URLs diretos, use `!play <url>`", false)
+            "• Para URLs diretos, use `!play <url>`\n" +
+            "• Comandos organizados por categoria e ordem alfabética", false)
 
         event.channel.sendMessageEmbeds(embed.build()).queue()
     }

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component
 @Component
 class PlayCommand(private val playerManager: PlayerManager) : Command {
     override val name = "play"
-    override val description = "Toca uma música pelo URL ou pesquisa no YouTube"
+    override val description = "Toca uma música pelo URL ou pesquisa universal"
     override val usage = "!play <url ou termo de busca>"
 
     override fun execute(event: MessageReceivedEvent, args: List<String>) {
