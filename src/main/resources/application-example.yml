@@ -1,0 +1,25 @@
+# 🎵 JJNex Music Bot - Configuração de Exemplo
+# Copie este arquivo e dê o nome de application.yml e configure seu token
+
+discord:
+  # Token do seu bot Discord (obtenha em: https://discord.com/developers/applications)
+  token: "SEU_TOKEN_DO_BOT_AQUI"
+  # Prefixo dos comandos (pode alterar se quiser)
+  prefix: "!"
+
+spring:
+  application:
+    name: JJNex Music Bot
+
+logging:
+  level:
+    root: INFO
+    com.jjnex: DEBUG
+    net.dv8tion: INFO
+
+# Como obter o token do bot:
+# 1. Acesse: https://discord.com/developers/applications
+# 2. Crie uma nova aplicação
+# 3. Vá para a seção "Bot"
+# 4. Clique em "Add Bot" ou "Reset Token"
+# 5. Copie o token e cole aqui
