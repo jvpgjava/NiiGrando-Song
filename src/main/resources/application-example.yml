@@ -3,7 +3,7 @@
 
 discord:
   # Token do seu bot Discord (obtenha em: https://discord.com/developers/applications)
-  token: MTM2MzAxMTA1MDczNTI3NjIyMw.Gb3ksr.2gJs09R7iWz81GfkzpQSvUry3MH3I4nyMqNnFs
+  token: |"SEU TOKEN DE BOT"
   # Prefixo dos comandos (pode alterar se quiser)
   prefix: "!"
 
