@@ -11,6 +11,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import dev.lavalink.youtube.YoutubeAudioSourceManager
 import dev.lavalink.youtube.clients.AndroidVr
 import dev.lavalink.youtube.clients.Music
+import dev.lavalink.youtube.clients.Tv
 import dev.lavalink.youtube.clients.Web
 import dev.lavalink.youtube.clients.WebEmbedded
 import net.dv8tion.jda.api.entities.Guild
@@ -36,13 +37,21 @@ class PlayerManager(
             // YoutubeAudioSourceManager nativo do LavaPlayer, que está quebrado (bloqueado
             // pelo YouTube). Este simula múltiplos clientes (Music, Android VR, Web) para
             // contornar o bloqueio.
+            // TV é o único cliente compatível com OAuth2 (ver
+            // https://github.com/lavalink-devs/youtube-source#available-clients). Fica por
+            // último porque sem token ele também exige login, então só compensa como fallback.
             val youtube = YoutubeAudioSourceManager(
                 true,
-                Music(), AndroidVr(), Web(), WebEmbedded()
+                Music(), AndroidVr(), Web(), WebEmbedded(), Tv()
             )
             if (youtubeOauthRefreshToken.isNotBlank()) {
                 youtube.useOauth2(youtubeOauthRefreshToken, true)
                 logger.info("   • YouTube OAuth2 - ✅ Configurado com token fornecido")
+            } else {
+                logger.warn("   • YouTube OAuth2 - ⚠️ Sem token configurado. Muitos vídeos vão pedir login " +
+                    "(comum em IPs de VPS/datacenter). Iniciando fluxo de autorização abaixo - siga as " +
+                    "instruções para gerar um token e configure 'youtube.oauth-refresh-token'.")
+                youtube.useOauth2(null, false)
             }
             playerManager.registerSourceManager(youtube)
 

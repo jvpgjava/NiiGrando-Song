@@ -60,12 +60,18 @@
             <artifactId>impl-jni</artifactId>
             <version>0.1.2</version>
         </dependency>
-        <!-- Biblioteca nativa do DAVE para Windows x86-64. Se for hospedar em Linux,
-             troque para moe.kyokobot.libdave:natives-linux-x86-64 (glibc) ou
-             natives-linux-musl-x86-64 (Alpine). -->
+        <!-- Bibliotecas nativas do DAVE. Incluídas as duas plataformas usadas neste projeto
+             (dev no Windows, produção na VPS Linux/glibc) - o loader nativo detecta o SO em
+             tempo de execução e usa só a que combina, a outra fica ociosa no jar. Se a VPS
+             usar musl (ex: Alpine), troque natives-linux-x86-64 por natives-linux-musl-x86-64. -->
         <dependency>
             <groupId>moe.kyokobot.libdave</groupId>
             <artifactId>natives-win-x86-64</artifactId>
+            <version>0.1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>moe.kyokobot.libdave</groupId>
+            <artifactId>natives-linux-x86-64</artifactId>
             <version>0.1.2</version>
         </dependency>
 
