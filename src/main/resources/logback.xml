@@ -7,9 +7,9 @@
     </appender>
 
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>logs/music-bot.log</file>
+        <file>logs/niigrando-song.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>logs/music-bot.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>logs/niigrando-song.%d{yyyy-MM-dd}.log</fileNamePattern>
             <maxHistory>30</maxHistory>
         </rollingPolicy>
         <encoder>
@@ -17,8 +17,10 @@
         </encoder>
     </appender>
 
-    <logger name="com.jjnex" level="DEBUG"/>
+    <logger name="com.niigrando" level="DEBUG"/>
     <logger name="net.dv8tion" level="INFO"/>
+    <logger name="net.dv8tion.jda.internal.audio" level="DEBUG"/>
+    <logger name="net.dv8tion.jda.internal.managers.AudioManagerImpl" level="DEBUG"/>
     <logger name="com.sedmelluq" level="INFO"/>
 
     <root level="INFO">

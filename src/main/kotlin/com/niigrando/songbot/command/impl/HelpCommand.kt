@@ -1,0 +1,67 @@
+package com.niigrando.songbot.command.impl
+
+import com.niigrando.songbot.command.Command
+import net.dv8tion.jda.api.EmbedBuilder
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.stereotype.Component
+import java.awt.Color
+
+@Component
+class HelpCommand(
+    @Value("\${discord.prefix}") private val prefix: String,
+    private val commands: List<Command>
+) : Command {
+    override val name = "help"
+    override val description = "Mostra todos os comandos disponíveis"
+    override val usage = "!help"
+
+    override fun execute(event: MessageReceivedEvent, args: List<String>) {
+        val embed = EmbedBuilder()
+            .setTitle("🎵 Comandos do NiiGrando-Song")
+            .setDescription("Prefixo: `$prefix`")
+            .setColor(Color.GREEN)
+
+        // Agrupar comandos por categoria
+        val platformCommands = commands.filter { it.name in listOf("play", "find", "soundcloud", "bandcamp", "twitch", "vimeo", "mixcloud", "radio", "file", "search") }
+        val controlCommands = commands.filter { it.name in listOf("pause", "resume", "skip", "stop", "queue", "np") }
+        val otherCommands = commands.filter { it.name !in listOf("play", "find", "soundcloud", "bandcamp", "twitch", "vimeo", "mixcloud", "radio", "file", "search", "pause", "resume", "skip", "stop", "queue", "np") }
+        
+        embed.addField("🎵 **Comandos de Música**", "", false)
+        platformCommands.sortedBy { it.name }.forEach { command ->
+            embed.addField(
+                "$prefix${command.name}",
+                "${command.description}\n`${command.usage}`",
+                false
+            )
+        }
+        
+        embed.addField("🎮 **Controles de Player**", "", false)
+        controlCommands.sortedBy { it.name }.forEach { command ->
+            embed.addField(
+                "$prefix${command.name}",
+                "${command.description}\n`${command.usage}`",
+                false
+            )
+        }
+        
+        embed.addField("ℹ️ **Outros Comandos**", "", false)
+        otherCommands.sortedBy { it.name }.forEach { command ->
+            embed.addField(
+                "$prefix${command.name}",
+                "${command.description}\n`${command.usage}`",
+                false
+            )
+        }
+        
+        embed.addField("💡 **Dicas**",
+            "• Use `!find` para busca universal em plataformas confiáveis\n" +
+            "• Use `!play` para busca automática\n" +
+            "• YouTube, SoundCloud e Bandcamp funcionam perfeitamente\n" +
+            "• Para qualquer link (YouTube, SoundCloud, etc.), use `!play <url>`\n" +
+            "• Comandos organizados por categoria e ordem alfabética", false)
+
+        event.channel.sendMessageEmbeds(embed.build()).queue()
+    }
+}
+

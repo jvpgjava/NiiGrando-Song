@@ -1,13 +1,15 @@
-# 🎵 JJNex Music Bot
+# 🎵 NiiGrando-Song
 
 <div align="center">
+
+<img src="assets/NiiGrando.png" alt="NiiGrando-Song" width="220" />
 
 ![Kotlin](https://img.shields.io/badge/Kotlin-0095D5?style=for-the-badge&logo=kotlin&logoColor=white)
 ![Spring Boot](https://img.shields.io/badge/Spring_Boot-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white)
 ![Discord](https://img.shields.io/badge/Discord-7289DA?style=for-the-badge&logo=discord&logoColor=white)
 ![Maven](https://img.shields.io/badge/Maven-3.6+-C71A36?style=for-the-badge&logo=apache-maven&logoColor=white)
 
-**Bot de música para Discord desenvolvido com Kotlin e Spring Boot**
+**Metade luz, metade sombra — toca qualquer música, de qualquer lugar.**
 
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
 [![Java](https://img.shields.io/badge/Java-17+-orange.svg?style=for-the-badge&logo=openjdk&logoColor=white)](https://openjdk.java.net/)
@@ -18,13 +20,13 @@
 
 ## 📋 Sobre o Projeto
 
-O **JJNex Music Bot** é um bot de música robusto e confiável para Discord, desenvolvido com as melhores práticas em **Kotlin** e **Spring Boot**. O bot oferece suporte a múltiplas plataformas de áudio, sistema de busca universal e comandos intuitivos.
+O **NiiGrando-Song** é um bot de música robusto e confiável para Discord, desenvolvido com as melhores práticas em **Kotlin** e **Spring Boot**. O bot oferece suporte a múltiplas plataformas de áudio, sistema de busca universal e comandos intuitivos.
 
 ### 🎯 **Objetivo**
 Criar um bot de música moderno, estável e fácil de usar que funcione com plataformas confiáveis, evitando problemas com APIs instáveis.
 
 ### ✨ **Características Principais**
-- 🎵 **Multi-plataforma** - Suporte a SoundCloud, Bandcamp, Twitch, Vimeo e mais
+- 🎵 **Multi-plataforma** - Suporte a YouTube, SoundCloud, Bandcamp, Twitch, Vimeo e mais
 - 🔍 **Busca Universal** - Encontra música em múltiplas plataformas automaticamente
 - 🎮 **Comandos Intuitivos** - Interface simples e fácil de usar
 - 🛡️ **Robusto** - Sistema de fallback entre plataformas
@@ -47,6 +49,7 @@ Criar um bot de música moderno, estável e fácil de usar que funcione com plat
 - **[Apache HTTP Client](https://hc.apache.org/)** - Cliente HTTP para requisições
 
 ### **Plataformas Suportadas**
+- ▶️ **YouTube** - Vídeos, músicas, playlists e busca (via [youtube-source](https://github.com/lavalink-devs/youtube-source))
 - 🎵 **SoundCloud** - Plataforma principal de música
 - 🎨 **Bandcamp** - Música independente
 - 📺 **Twitch** - Streams ao vivo
@@ -67,8 +70,8 @@ Criar um bot de música moderno, estável e fácil de usar que funcione com plat
 
 ### **1. Clone o Repositório**
 ```bash
-git clone https://github.com/seu-usuario/jjnex-music-bot.git
-cd jjnex-music-bot
+git clone https://github.com/seu-usuario/niigrando-song.git
+cd niigrando-song
 ```
 
 ### **2. Configure o Token**
@@ -98,7 +101,7 @@ mvn clean spring-boot:run
 
 # Ou compilar JAR e executar
 mvn clean package
-java -jar target/music-bot-1.0.0.jar
+java -jar target/niigrando-song-1.0.0.jar
 ```
 
 ---
@@ -110,7 +113,7 @@ Vá para: https://discord.com/developers/applications
 
 ### **2. Crie uma Nova Aplicação**
 - Clique em **"New Application"**
-- Dê um nome para seu bot (ex: "JJNex Music Bot")
+- Dê um nome para seu bot (ex: "NiiGrando-Song")
 - Clique em **"Create"**
 
 ### **3. Crie o Bot**
@@ -149,6 +152,7 @@ Na seção **"OAuth2 > URL Generator"**:
 
 ### 🎵 **Comandos por Plataforma**
 ```
+!play <URL do YouTube>       # YouTube (vídeo, playlist ou busca via !play <nome>)
 !soundcloud <nome ou URL>    # SoundCloud
 !bandcamp <nome ou URL>      # Bandcamp
 !twitch <URL do stream>      # Streams do Twitch
@@ -178,8 +182,8 @@ Na seção **"OAuth2 > URL Generator"**:
 ## 📁 Estrutura do Projeto
 
 ```
-src/main/kotlin/com/jjnex/musicbot/
-├── MusicBotApplication.kt              # Classe principal
+src/main/kotlin/com/niigrando/songbot/
+├── NiiGrandoSongApplication.kt         # Classe principal
 ├── config/
 │   └── BotConfiguration.kt             # Configuração do JDA
 ├── audio/
@@ -190,7 +194,7 @@ src/main/kotlin/com/jjnex/musicbot/
 │   ├── Command.kt                      # Interface de comando
 │   └── impl/
 │       ├── PlayCommand.kt              # Comando play (busca universal)
-│       ├── FindCommand.kt              # Comando find (busca explícita)
+│       ├── UniversalSearchCommand.kt   # Comando find (busca explícita)
 │       ├── SoundCloudCommand.kt        # Comando específico SoundCloud
 │       ├── BandcampCommand.kt          # Comando específico Bandcamp
 │       ├── TwitchCommand.kt            # Comando específico Twitch
@@ -252,6 +256,7 @@ O bot precisa das seguintes permissões no Discord:
 !play despacito
 
 # 3. Testar comandos específicos
+!play despacito luis fonsi   # busca no YouTube
 !soundcloud linkin park
 !bandcamp imagine dragons
 
@@ -263,6 +268,10 @@ O bot precisa das seguintes permissões no Discord:
 
 ### **Testes de URLs Diretos**
 ```bash
+# YouTube
+!play https://www.youtube.com/watch?v=dQw4w9WgXcQ
+!play https://youtu.be/dQw4w9WgXcQ
+
 # SoundCloud
 !play https://soundcloud.com/artist/song
 
@@ -296,11 +305,24 @@ O bot precisa das seguintes permissões no Discord:
 3. ✅ Verifique se o prefixo está correto (padrão: `!`)
 
 ### **Problemas com plataformas específicas**
+- **YouTube**: Funciona via [youtube-source](https://github.com/lavalink-devs/youtube-source). Se aparecer erro pedindo login ("Sign in to confirm you're not a bot") em algum vídeo específico, configure `youtube.oauth-refresh-token` no `application.yml` (veja [Configuração do YouTube](#-configuração-do-youtube))
 - **SoundCloud**: Funciona perfeitamente
 - **Bandcamp**: Funciona bem
 - **Twitch**: Use URLs diretos de streams
 - **Vimeo**: Use URLs diretos de vídeos
 - **Arquivos**: Use caminhos absolutos ou URLs file://
+
+### **🔑 Configuração do YouTube (OAuth2, opcional)**
+Na maioria dos casos o YouTube funciona sem configuração extra. Mas o YouTube ocasionalmente exige login para tocar certos vídeos. Se isso acontecer:
+
+1. Rode o bot e, no primeiro uso que exigir login, os logs vão indicar a URL `https://www.google.com/device` e um código — ou gere o token com antecedência usando a própria lib ([instruções](https://github.com/lavalink-devs/youtube-source#oauth2)).
+2. Acesse essa URL em um navegador (recomendado usar uma conta Google secundária, não sua conta principal) e digite o código.
+3. Copie o refresh token gerado e cole em `src/main/resources/application.yml`:
+   ```yaml
+   youtube:
+     oauth-refresh-token: "SEU_REFRESH_TOKEN_AQUI"
+   ```
+4. Reinicie o bot.
 
 ---
 
@@ -326,8 +348,8 @@ Contribuições são bem-vindas! Para contribuir:
 
 Se você encontrar algum problema ou tiver dúvidas:
 
-- 🐛 **Reporte bugs** abrindo uma [issue](https://github.com/seu-usuario/jjnex-music-bot/issues)
-- 💡 **Sugira melhorias** abrindo uma [issue](https://github.com/seu-usuario/jjnex-music-bot/issues)
+- 🐛 **Reporte bugs** abrindo uma [issue](https://github.com/seu-usuario/niigrando-song/issues)
+- 💡 **Sugira melhorias** abrindo uma [issue](https://github.com/seu-usuario/niigrando-song/issues)
 - 📧 **Entre em contato** através das issues do GitHub
 
 ---

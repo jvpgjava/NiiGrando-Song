@@ -1,4 +1,4 @@
-# 🎵 JJNex Music Bot - Configuração de Exemplo
+# 🎵 NiiGrando-Song - Configuração de Exemplo
 # Copie este arquivo e dê o nome de application.yml e configure seu token
 
 discord:
@@ -7,14 +7,19 @@ discord:
   # Prefixo dos comandos (pode alterar se quiser)
   prefix: "!"
 
+youtube:
+  # Opcional: token de refresh do OAuth2, necessario apenas se alguns videos pedirem login.
+  # Veja o README para instrucoes de como gerar.
+  oauth-refresh-token: ""
+
 spring:
   application:
-    name: JJNex Music Bot
+    name: NiiGrando-Song
 
 logging:
   level:
     root: INFO
-    com.jjnex: DEBUG
+    com.niigrando: DEBUG
     net.dv8tion: INFO
 
 # Como obter o token do bot:

@@ -9,8 +9,8 @@
 ### **2. Clone e Configure**
 ```bash
 # Clone o repositório
-git clone https://github.com/seu-usuario/jjnex-music-bot.git
-cd jjnex-music-bot
+git clone https://github.com/seu-usuario/niigrando-song.git
+cd niigrando-song
 
 # Copie o arquivo de configuração
 cp src/main/resources/application-example.yml src/main/resources/application.yml
@@ -96,8 +96,8 @@ mvn spring-boot:run
 
 ## 📞 Precisa de Ajuda?
 
-- 🐛 **Bugs:** Abra uma [issue](https://github.com/seu-usuario/jjnex-music-bot/issues)
-- 💡 **Sugestões:** Abra uma [issue](https://github.com/seu-usuario/jjnex-music-bot/issues)
+- 🐛 **Bugs:** Abra uma [issue](https://github.com/seu-usuario/niigrando-song/issues)
+- 💡 **Sugestões:** Abra uma [issue](https://github.com/seu-usuario/niigrando-song/issues)
 - 📖 **Documentação:** Veja o [README.md](README.md) completo
 
 ---

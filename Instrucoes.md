@@ -1,4 +1,4 @@
-# 🎵 Instruções Completas - JJNex Music Bot
+# 🎵 Instruções Completas - NiiGrando-Song
 
 ## 📋 Índice
 - [Comandos de Música](#-comandos-de-música)
@@ -21,6 +21,7 @@
 ### **Comandos por Plataforma**
 | Comando | Plataforma | Descrição | Exemplo |
 |---------|------------|-----------|---------|
+| `!play <URL ou nome>` | YouTube | Busca/carrega do YouTube (vídeo, playlist ou busca) | `!play https://youtu.be/dQw4w9WgXcQ` |
 | `!soundcloud <nome ou URL>` | SoundCloud | Busca/carrega do SoundCloud | `!soundcloud despacito` |
 | `!bandcamp <nome ou URL>` | Bandcamp | Busca/carrega do Bandcamp | `!bandcamp imagine dragons` |
 | `!twitch <URL>` | Twitch | Carrega stream do Twitch | `!twitch https://www.twitch.tv/username` |
@@ -53,6 +54,14 @@
 ---
 
 ## 🎯 Exemplos por Plataforma
+
+### **YouTube**
+```
+!play despacito luis fonsi
+!play https://www.youtube.com/watch?v=dQw4w9WgXcQ
+!play https://youtu.be/dQw4w9WgXcQ
+!play https://www.youtube.com/playlist?list=PLxxxxxx
+```
 
 ### **SoundCloud**
 ```
@@ -104,6 +113,12 @@
 ---
 
 ## 🔗 URLs Suportadas
+
+### **YouTube**
+- ✅ `https://www.youtube.com/watch?v=VIDEO_ID`
+- ✅ `https://youtu.be/VIDEO_ID`
+- ✅ `https://www.youtube.com/playlist?list=PLAYLIST_ID`
+- ✅ `https://music.youtube.com/watch?v=VIDEO_ID`
 
 ### **SoundCloud**
 - ✅ `https://soundcloud.com/artist/song-name`
@@ -212,9 +227,10 @@
 ## 🔍 Como Funciona a Busca Universal
 
 ### **Processo Automático:**
-1. **Tentativa 1:** SoundCloud
-2. **Tentativa 2:** Bandcamp
-3. **Se falhar:** Mensagem de erro com sugestões
+1. **Tentativa 1:** YouTube
+2. **Tentativa 2:** SoundCloud
+3. **Tentativa 3:** Bandcamp
+4. **Se falhar:** Mensagem de erro com sugestões
 
 ### **Vantagens:**
 - ✅ **Automático** - Não precisa especificar plataforma
@@ -230,6 +246,11 @@
 1. ✅ Verifique se está em um canal de voz
 2. ✅ Verifique se o bot tem permissão para falar
 3. ✅ Tente comando específico: `!soundcloud <nome>`
+
+### **YouTube pede login ("Sign in to confirm you're not a bot")**
+1. ✅ Isso acontece em alguns vídeos específicos que o YouTube restringe
+2. ✅ Configure `youtube.oauth-refresh-token` no `application.yml` (veja o README)
+3. ✅ Enquanto isso, tente `!soundcloud <nome>` como alternativa
 
 ### **Busca não encontra nada**
 1. ✅ Tente nome mais específico
@@ -252,6 +273,7 @@
 
 | Plataforma | Status | Busca | URLs | Confiabilidade |
 |------------|--------|-------|------|----------------|
+| **YouTube** | ✅ | ✅ | ✅ | 95% (pode exigir OAuth em alguns vídeos) |
 | **SoundCloud** | ✅ | ✅ | ✅ | 100% |
 | **Bandcamp** | ✅ | ✅ | ✅ | 95% |
 | **Twitch** | ✅ | ❌ | ✅ | 90% |
