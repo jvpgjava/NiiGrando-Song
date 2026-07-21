@@ -313,7 +313,7 @@ O bot precisa das seguintes permissões no Discord:
 - **Arquivos**: Use caminhos absolutos ou URLs file://
 
 ### **🔑 Configuração do YouTube (OAuth2, opcional)**
-Na maioria dos casos o YouTube funciona sem configuração extra. Mas o YouTube ocasionalmente exige login para tocar certos vídeos. Se isso acontecer:
+Na maioria dos casos o YouTube funciona sem configuração extra. Mas o YouTube ocasionalmente exige login para tocar certos vídeos (restrição de idade). Se isso acontecer:
 
 1. Rode o bot e, no primeiro uso que exigir login, os logs vão indicar a URL `https://www.google.com/device` e um código — ou gere o token com antecedência usando a própria lib ([instruções](https://github.com/lavalink-devs/youtube-source#oauth2)).
 2. Acesse essa URL em um navegador (recomendado usar uma conta Google secundária, não sua conta principal) e digite o código.
@@ -323,6 +323,11 @@ Na maioria dos casos o YouTube funciona sem configuração extra. Mas o YouTube 
      oauth-refresh-token: "SEU_REFRESH_TOKEN_AQUI"
    ```
 4. Reinicie o bot.
+
+> **Nota:** na versão atual do `youtube-source` (1.18.1), o único cliente que declara suporte a OAuth (`TV`) vem desabilitado para carregamento de vídeo no próprio código da lib — configurar o token não tem efeito prático em vídeos com restrição de idade hoje. Ele fica configurado só para quando a lib corrigir isso. Para cobrir esses vídeos agora, use o fallback via `yt-dlp` (veja abaixo).
+
+### **🛟 Fallback via yt-dlp (opcional, para vídeos com restrição)**
+Para vídeos que o YouTube bloqueia mesmo com OAuth, existe um microsserviço Python opcional em [`ytdlp-resolver/`](ytdlp-resolver/) que usa `yt-dlp` com cookies de uma conta logada para baixar esses vídeos. Roda isolado, só em `localhost`. Veja [`ytdlp-resolver/README.md`](ytdlp-resolver/README.md) para configurar, e ative apontando `ytdlp.resolver-url` no `application.yml`.
 
 ---
 

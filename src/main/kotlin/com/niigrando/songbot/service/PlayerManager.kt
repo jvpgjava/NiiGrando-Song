@@ -19,11 +19,13 @@ import net.dv8tion.jda.api.entities.channel.concrete.TextChannel
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
+import java.net.URLEncoder
 import java.util.concurrent.ConcurrentHashMap
 
 @Service
 class PlayerManager(
-    @Value("\${youtube.oauth-refresh-token:}") private val youtubeOauthRefreshToken: String
+    @Value("\${youtube.oauth-refresh-token:}") private val youtubeOauthRefreshToken: String,
+    @Value("\${ytdlp.resolver-url:}") private val ytdlpResolverUrl: String
 ) {
     private val logger = LoggerFactory.getLogger(PlayerManager::class.java)
     private val playerManager: AudioPlayerManager = DefaultAudioPlayerManager()
@@ -117,6 +119,8 @@ class PlayerManager(
 
             override fun loadFailed(exception: FriendlyException) {
                 logger.error("Erro ao carregar áudio: $trackUrl", exception)
+                val requiresLogin = exception.message?.contains("requires login", ignoreCase = true) == true ||
+                    exception.message?.contains("Sign in", ignoreCase = true) == true
                 val errorMessage = when {
                     exception.message?.contains("age restricted") == true ->
                         "❌ Conteúdo com restrição de idade. Tente outro link."
@@ -124,13 +128,51 @@ class PlayerManager(
                         "❌ Conteúdo privado ou indisponível."
                     exception.message?.contains("not found") == true ->
                         "❌ Conteúdo não encontrado. Tente outro link ou busca."
-                    exception.message?.contains("Sign in", ignoreCase = true) == true ||
-                        exception.message?.contains("bot", ignoreCase = true) == true ->
+                    requiresLogin ->
                         "❌ O YouTube está pedindo login para este vídeo.\n" +
                             "💡 Configure `youtube.oauth-refresh-token` no `application.yml` (veja o README)."
                     else -> "❌ Não foi possível reproduzir: ${exception.message}\n💡 Tente `!find <nome da música>` ou use URLs diretos"
                 }
-                channel.sendMessage(errorMessage).queue()
+
+                val isYoutubeUrl = trackUrl.contains("youtube.com") || trackUrl.contains("youtu.be")
+                if (requiresLogin && isYoutubeUrl && ytdlpResolverUrl.isNotBlank()) {
+                    tryYtDlpFallback(channel, musicManager, trackUrl, errorMessage)
+                } else {
+                    channel.sendMessage(errorMessage).queue()
+                }
+            }
+        })
+    }
+
+    private fun tryYtDlpFallback(channel: TextChannel, musicManager: GuildMusicManager, originalUrl: String, originalErrorMessage: String) {
+        channel.sendMessage("🔄 YouTube pediu login para esse vídeo, tentando via yt-dlp...").queue()
+
+        val encodedUrl = URLEncoder.encode(originalUrl, "UTF-8")
+        val resolverTrackUrl = "$ytdlpResolverUrl/resolve?url=$encodedUrl"
+
+        playerManager.loadItemOrdered(musicManager, resolverTrackUrl, object : AudioLoadResultHandler {
+            override fun trackLoaded(track: AudioTrack) {
+                channel.sendMessage("🎵 **YouTube (via yt-dlp)** - Adicionando à fila").queue()
+                musicManager.scheduler.queue(track)
+            }
+
+            override fun playlistLoaded(playlist: AudioPlaylist) {
+                val firstTrack = playlist.selectedTrack ?: playlist.tracks.firstOrNull()
+                if (firstTrack == null) {
+                    channel.sendMessage(originalErrorMessage).queue()
+                    return
+                }
+                channel.sendMessage("🎵 **YouTube (via yt-dlp)** - Adicionando à fila").queue()
+                musicManager.scheduler.queue(firstTrack)
+            }
+
+            override fun noMatches() {
+                channel.sendMessage(originalErrorMessage).queue()
+            }
+
+            override fun loadFailed(exception: FriendlyException) {
+                logger.error("Fallback yt-dlp também falhou para: $originalUrl", exception)
+                channel.sendMessage(originalErrorMessage).queue()
             }
         })
     }

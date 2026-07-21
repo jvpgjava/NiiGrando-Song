@@ -12,6 +12,11 @@ youtube:
   # Veja o README para instrucoes de como gerar.
   oauth-refresh-token: ""
 
+ytdlp:
+  # Opcional: URL do microsservico de fallback (ytdlp-resolver/). Deixe vazio para
+  # desativar. Veja ytdlp-resolver/README.md para configurar.
+  resolver-url: ""
+
 spring:
   application:
     name: NiiGrando-Song

@@ -37,4 +37,11 @@ build/
 
 ### Configuration ###
 src/main/resources/application.yml
+application.yml
+
+### yt-dlp resolver ###
+ytdlp-resolver/cookies.txt
+ytdlp-resolver/venv/
+ytdlp-resolver/.venv/
+ytdlp-resolver/__pycache__/
 
