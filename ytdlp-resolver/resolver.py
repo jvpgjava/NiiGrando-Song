@@ -1,20 +1,20 @@
 """
 Microsserviço local de fallback para o NiiGrando-Song.
 
-Usa yt-dlp para baixar o áudio de vídeos que o youtube-source (Java) não
-consegue carregar (ex: restrição de idade/login). Só deve ser acessado pelo
-próprio bot, na mesma máquina - não expõe para a internet.
+Usa yt-dlp para extrair a URL de áudio direta (CDN do YouTube) de vídeos que
+o youtube-source (Java) não consegue carregar (ex: restrição de idade/login).
+Só faz extração, não baixa nada - o LavaPlayer é redirecionado pra URL direta
+e transmite de lá, então a resposta é praticamente instantânea. Só deve ser
+acessado pelo próprio bot, na mesma máquina - não expõe para a internet.
 
 Uso: GET /resolve?url=<url do youtube>
-Retorna o arquivo de áudio baixado como resposta HTTP.
+Responde com um redirect (302) para a URL direta do stream de áudio.
 """
 
 import os
-import shutil
-import tempfile
 
 import yt_dlp
-from flask import Flask, jsonify, request, send_file
+from flask import Flask, jsonify, redirect, request
 
 app = Flask(__name__)
 
@@ -29,12 +29,8 @@ def resolve():
     if not url:
         return jsonify({"error": "parâmetro 'url' é obrigatório"}), 400
 
-    tmp_dir = tempfile.mkdtemp(prefix="ytdlp-")
-    out_template = os.path.join(tmp_dir, "%(id)s.%(ext)s")
-
     ydl_opts = {
         "format": "bestaudio/best",
-        "outtmpl": out_template,
         "quiet": True,
         "no_warnings": True,
         "noplaylist": True,
@@ -45,23 +41,20 @@ def resolve():
 
     try:
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-            info = ydl.extract_info(url, download=True)
-            filename = ydl.prepare_filename(info)
+            info = ydl.extract_info(url, download=False)
     except Exception as exc:
-        shutil.rmtree(tmp_dir, ignore_errors=True)
         return jsonify({"error": str(exc)}), 502
 
-    if not os.path.exists(filename):
-        shutil.rmtree(tmp_dir, ignore_errors=True)
-        return jsonify({"error": "yt-dlp não gerou o arquivo esperado"}), 502
+    stream_url = info.get("url")
+    if not stream_url:
+        requested_formats = info.get("requested_formats") or []
+        if requested_formats:
+            stream_url = requested_formats[0].get("url")
 
-    response = send_file(filename, mimetype="application/octet-stream", conditional=False)
+    if not stream_url:
+        return jsonify({"error": "yt-dlp não retornou uma URL de stream"}), 502
 
-    @response.call_on_close
-    def cleanup():
-        shutil.rmtree(tmp_dir, ignore_errors=True)
-
-    return response
+    return redirect(stream_url, code=302)
 
 
 @app.route("/health")
