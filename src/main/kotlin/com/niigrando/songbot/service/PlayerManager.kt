@@ -5,6 +5,7 @@ import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers
+import com.sedmelluq.discord.lavaplayer.source.http.HttpAudioSourceManager
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
@@ -16,6 +17,7 @@ import dev.lavalink.youtube.clients.Web
 import dev.lavalink.youtube.clients.WebEmbedded
 import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel
+import org.apache.http.client.config.RequestConfig
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
@@ -60,6 +62,17 @@ class PlayerManager(
             // Registrar as demais fontes disponíveis (plataformas confiáveis)
             AudioSourceManagers.registerRemoteSources(playerManager)
             AudioSourceManagers.registerLocalSource(playerManager)
+
+            // O timeout padrão do LavaPlayer para fontes HTTP genéricas é de só 3s, curto
+            // demais para o fallback via yt-dlp/resolver local, que às vezes demora alguns
+            // segundos pra resolver o desafio JS + autenticação antes de começar a responder.
+            playerManager.source(HttpAudioSourceManager::class.java)?.configureRequests { config ->
+                RequestConfig.copy(config)
+                    .setConnectTimeout(15000)
+                    .setConnectionRequestTimeout(15000)
+                    .setSocketTimeout(15000)
+                    .build()
+            }
 
             logger.info("✅ Fontes de áudio configuradas com sucesso!")
             logger.info("🎵 Plataformas suportadas:")
