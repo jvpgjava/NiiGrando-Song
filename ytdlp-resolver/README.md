@@ -5,9 +5,10 @@ normal (via `youtube-source`, no bot Kotlin) falha com "requires login" —
 tipicamente vídeos com restrição de idade. Roda só em `localhost`, nunca
 exposto pra internet.
 
-Extrai a URL direta do CDN do YouTube com `yt-dlp` e faz proxy da requisição
-em streaming (sem baixar tudo antes) - necessário porque essa URL só aceita
-requisições com os headers exatos que o yt-dlp usou pra extraí-la.
+Roda o `yt-dlp` como subprocesso, transmitindo o áudio direto pro bot
+conforme baixa (sem esperar terminar) - assim os headers da requisição pro
+CDN do Google sempre ficam corretos, porque é o próprio yt-dlp que faz a
+requisição.
 
 ## Setup na VPS
 
