@@ -44,4 +44,5 @@ ytdlp-resolver/cookies.txt
 ytdlp-resolver/venv/
 ytdlp-resolver/.venv/
 ytdlp-resolver/__pycache__/
+ytdlp-resolver/browser-profile/
 
